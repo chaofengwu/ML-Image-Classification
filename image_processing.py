@@ -3,6 +3,7 @@ import os
 import numpy as np
 from pylab import *
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 
 plot_flag = 0
 image_size = 300,300
@@ -154,6 +155,22 @@ def find_coeffs(pa, pb):
     return np.array(res).reshape(8)
 
 
+def pca_value(input_data, n_components):
+	pca = PCA(n_components=n_components)
+	# pca = PCA()
+	a = pca.fit(input_data)
+	# print(a.explained_variance_ratio_)
+	# print(a.singular_values_)
+	return a.singular_values_
+
+
+def pca_image(image, n_components):
+	
+	imag = image.convert("L")
+	ima = np.array(imag)
+	return pca_value(ima, n_components)
+
+
 def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, each one is n_mean^2 square mean
 	n_for_1 = n_mean*n_mean
 	total_block = n_block*n_block
@@ -167,6 +184,7 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 	color = get_color(image)
 	# extrema = get_extrema(image)
 	histo = get_color_histo(image)
+	pca_ima = pca_image(image, 10)
 	coeffs = find_coeffs([(0,0), (dimension[0],0), (dimension[0], dimension[1]), (0, dimension[1])],
 		[(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])])
 	try:
@@ -177,7 +195,7 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 		print("error when transfrom image size in PIL: " + file_name)
 		square = []
 
-	return [dimension, mode, color, histo, square]
+	return [dimension, mode, color, histo, pca_ima, square]
 
 
 # [dimension, mode, color, extrema, histo, square] = get_image_metadata("maps.jpeg", 2, 3)
