@@ -35,11 +35,11 @@ if time_flag:
 
 print(len(file_list))
 print(len(dimension))
-print(dimension[0])
-print(color[0])
-print(histo[0])
-print(pca_ima[0])
-print(square[0])
+print(dimension)
+print(color)
+print(histo)
+print(pca_ima)
+print(square)
 # file_n = "file_list.txt"
 # file = open(file_n, "w")
 # for i in file_list:

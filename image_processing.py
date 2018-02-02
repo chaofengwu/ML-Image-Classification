@@ -177,8 +177,8 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 	try:
 		image = Image.open(file_name)
 	except:
-		return [(-1,-1), "RGB", [],[],[]]
-	
+		return [(-1,-1), "RGB", [],[],[],[]]
+
 	dimension = get_dimension(image)
 	mode = get_mode(image)
 	color = get_color(image)

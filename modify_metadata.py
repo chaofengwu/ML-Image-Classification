@@ -11,6 +11,8 @@ def pca_value(input_data, n_components):
 	# print(a.singular_values_)
 	return a.singular_values_
 
+def add(x,y): 
+	return x+y
 
 ###### for dimension, nothing to do ###### 2
 
@@ -22,46 +24,44 @@ def pca_value(input_data, n_components):
 
 ###### for mean, may get avarage pixel ###### 3
 
-def modify_color(color):
-	res = []
+def modify_color(co):
+	res = [0,0,0,0,0]
 	temp = 0
-	for i in range(5):
-		temp += color[i][0]
-	res += [temp]
-	temp = 0
-	for i in range(5,87):
-		temp += color[i][0]
-	res += [temp]
-	temp = 0
-	for i in range(87,169):
-		temp += color[i][0]
-	res += [temp]
-	temp = 0
-	for i in range(169,251):
-		temp += color[i][0]
-	res += [temp]
-	temp = 0
-	for i in range(251,256):
-		temp += color[i][0]
-	res += [temp]
+	for idx in range(len(co)):
+		a = 1
+		if (co[idx][1]) < 5:
+			res[0] += co[idx][0]
+		elif co[idx][1] < 87:
+			res[1] += co[idx][0]
+		elif co[idx][1] < 169:
+			res[2] += co[idx][0]
+		elif co[idx][1] < 251:
+			res[3] += co[idx][0]
+		elif co[idx][1] < 256:
+			res[4] += co[idx][0]
+		else:
+			print('modify color: color index out of range')
 	return res
 
 
-def modify_histogram(histo):
+def modify_histogram(hi):
 	res = []
-	for i in range(len(histo)):
-		temp = [[histo[i][0:255]],[histo[i][255:510]],[histo[i][510:765]]]
-		res += [pca_value(temp,6)]
+	temp = [hi[0:255],hi[255:510],hi[510:765]]
+	# print(temp)
+	for i in range(3):
+		res += [pca_value([temp[i],range(255)],2)]
 	return res
 
 
-def modify_square(square):
-	h, w = square.size
+def modify_square(sq):
+	h = len(sq)
+	w = len(sq[0])
+	total = h*w
 	res = [0,0,0]
 	for i in range(h):
 		for j in range(w):
-			t = map(add, (square[i][j]), res)
-	return res
+			res = map(add, (sq[i][j]), res)
+	return [i/total for i in res]
 
 
 
@@ -75,19 +75,24 @@ def modify_image_metadata(file_list):
 	square = []
 	count = 1
 	for i in file_list:
-		[di, mo, co, hi, pca_ima, sq] = image_processing.pil_get_image_metadata(i, 1, 100)
-		dimension += di
-		mode += mo
-		color += co
-		histo += hi
-		square += sq
-		# image_processing.get_image_metadata(i, 2, 3)
 		print(str(count) + i + "\n")
+		[di, mo, co, hi, pca_ima, sq] = image_processing.pil_get_image_metadata(i, 1, 100)
+		if di != (-1,-1):
+			co = modify_color(co)
+			hi = modify_histogram(hi)
+			sq = modify_square(sq)
+		dimension += [di]
+		mode += [mo]
+		color += [co]
+		histo += [hi]
+		square += [sq]
+		# image_processing.get_image_metadata(i, 2, 3)
+		
 		count += 1
-		if count == 6:
-			break
-	print(histo[0])
-	color = modify_color(color)
-	histo = modify_histogram(histo)
-	square = modify_square(square)
+		# if count == 3:
+		# 	break
+	# print(histo)
+	
 	return [dimension, mode, color, histo, pca_ima, square]
+
+# modify_image_metadata(['/home/chaofeng/Documents/practicum/copy_images/images/._RR2016.jpg'])
