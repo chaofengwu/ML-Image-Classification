@@ -1,5 +1,5 @@
 import system_metadata
-import image_processing
+# import image_processing
 import modify_metadata
 import svm
 import time
@@ -19,7 +19,9 @@ print(start_time)
 
 [dimension, mode, color, histo, pca_ima, square] = modify_metadata.modify_image_metadata(file_list)
 
+svm.try_svm(color, histo, pca_ima, square)
 
+# input_data = [dimension, color, histo, pca_ima, square]
 # raw_image_matadata = []
 # count = 1
 # for i in file_list:
@@ -33,13 +35,14 @@ if time_flag:
 	train_time = end_time - start_time
 	print('total time: %d seconds' % train_time)
 
-print(len(file_list))
-print(len(dimension))
-print(dimension)
-print(color)
-print(histo)
-print(pca_ima)
-print(square)
+# print(len(file_list))
+# print(len(dimension))
+# print(dimension)
+# print(color)
+# print(histo)
+# print(pca_ima)
+# print(square)
+
 # file_n = "file_list.txt"
 # file = open(file_n, "w")
 # for i in file_list:

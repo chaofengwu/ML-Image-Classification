@@ -13,13 +13,32 @@ import numpy as np
 ########### Train
 
 ##### Get input data
-def get_train_data(data):
-	return
+def get_train_data(color, histo, pca_ima, square):
+	data_size = len(color)
+	feature_data = []
+	for i in range(data_size):
+		temp = []
+		temp.extend(color[i])
+		for j in range(len(histo[i])):
+			temp.extend(histo[i][j])
+		temp.append((pca_ima[i]))
+		for j in range(len(square[i])):
+			temp.extend(square[i][j])
+		feature_data += [temp]
+	print(feature_data)
+	return feature_data
 
+def get_label_data(file_name):
+	f = open(file_name)
+	content = f.readlines()
+		# you may also want to remove whitespace characters like `\n` at the end of each line
+	content = [x.strip()[0] for x in content]
+	print(content)
 
-def try_svm(data):
-	data_train = get_train_data(data)
-	data_label = []
+# data = [color, histo, pca_ima, square]
+def try_svm(color, histo, pca_ima, square):
+	data_train = get_train_data(color, histo, pca_ima, square)
+	data_label = get_label_data('/home/chaofeng/Documents/practicum/label.txt')
 
 	data_train = np.asarray(data_train)
 	data_label = np.asarray(data_label)
@@ -28,10 +47,10 @@ def try_svm(data):
 
 	svm = SVC()
 	score = cross_validation.cross_val_score(svm, data_train, data_label, cv = 10, scoring='accuracy')
-	
+	print(score)
 
 
-
+# get_label_data('/home/chaofeng/Documents/practicum/label.txt')
 
 
 

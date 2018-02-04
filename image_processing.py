@@ -4,6 +4,7 @@ import numpy as np
 from pylab import *
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+import json
 
 plot_flag = 0
 image_size = 300,300
@@ -123,22 +124,30 @@ def n_square_mean(image, upper_b, lower_b, right_b, left_b, n, mode):
 			for k in range(n):
 				for l in range(n):
 					try:
-						t = map(add, (pix[i + k*row_length,j + l*col_length]), t)
+						t = map(add, (pix[lower_b + i + k*row_length,left_b + j + l*col_length]), t)
 					except:
 						# t = [0,0,0]
 						print([i + k*row_length,j + l*col_length])
 						print("index wrong in n_square_mean")
 			temp.append([x/sq for x in t])
+		# print('in n_square_mean: %d' % len(temp))
+		# print('in n_square_mean: %d' % len(temp[0]))
 		res.append(temp)
+		# print('in n_square_mean: %d' % len(res[0]))
+	# print('res: %d' % len(res))
+	# print('res: %d' % len(res[0]))
+	# print('res: %d' % len(res[0][0]))
 	return res
 
 
 def get_n_block(image, dimension, n_block, n_mean):
 	square = []
-	[upper_b, right_b, col_length, row_length] = cut_edge(dimension[0],0,dimension[1], 0, n_block)
+	# [upper_b, right_b, col_length, row_length] = cut_edge(dimension[0],0,dimension[1], 0, n_block)
+	row_length = int(dimension[0] / n_block)
+	col_length = int(dimension[1] / n_block)
 	for i in range(n_block):
 		for j in range(n_block):
-			square += n_square_mean(image, dimension[0] - i*row_length, dimension[0]-(i+1)*row_length, dimension[1]-j*col_length, dimension[1] - (j+1)*col_length, n_mean, "RGB")
+			square += [n_square_mean(image, dimension[0] - i*row_length, dimension[0]-(i+1)*row_length, dimension[1]-j*col_length, dimension[1] - (j+1)*col_length, n_mean, "RGB")]
 	return square
 
 
@@ -168,7 +177,13 @@ def pca_image(image, n_components):
 	
 	imag = image.convert("L")
 	ima = np.array(imag)
-	return pca_value(ima, n_components)
+	return pca_value(ima, n_components).tolist()
+
+
+def scale_to_width(dimensions, width):
+    height = (width * dimensions[1]) / dimensions[0]
+
+    return (width, height)
 
 
 def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, each one is n_mean^2 square mean
@@ -185,16 +200,17 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 	# extrema = get_extrema(image)
 	histo = get_color_histo(image)
 	pca_ima = pca_image(image, 10)
-	coeffs = find_coeffs([(0,0), (dimension[0],0), (dimension[0], dimension[1]), (0, dimension[1])],
-		[(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])])
+	coeffs = find_coeffs([(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])],[(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])])
+
 	try:
-		im = image.transform(image_size, Image.PERSPECTIVE, coeffs, resample = Image.BICUBIC)
+		im = image.resize(image_size, Image.NEAREST)
+		# im = image.transform(image_size, Image.PERSPECTIVE, coeffs, resample = Image.BICUBIC)
+		# im.show()
 		dime = get_dimension(im)
 		square = get_n_block(im, dime, n_block, n_mean)
 	except:
 		print("error when transfrom image size in PIL: " + file_name)
 		square = []
-
 	return [dimension, mode, color, histo, pca_ima, square]
 
 
