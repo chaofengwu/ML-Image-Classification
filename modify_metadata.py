@@ -30,6 +30,7 @@ def modify_color(co):
 	temp = 0
 	for idx in range(len(co)):
 		a = 1
+		temp += co[idx][0]
 		if (co[idx][1]) < 5:
 			res[0] += co[idx][0]
 		elif co[idx][1] < 87:
@@ -42,7 +43,7 @@ def modify_color(co):
 			res[4] += co[idx][0]
 		else:
 			print('modify color: color index out of range')
-	return res
+	return [i / temp for i in res]
 
 
 def modify_histogram(hi):
@@ -89,15 +90,18 @@ def modify_image_metadata(file_list):
 	color = []
 	histo = []
 	square = []
+	pca_ima = []
 	count = 1
 	try:
 		with open("data.json") as json_file:
 			[dimension, mode, color, histo, pca_ima, square] = json.load(json_file)
-			print([dimension, mode, color, histo, pca_ima, square])
+			# print([dimension, mode, color, histo, pca_ima, square])
+			# print('\n\n\n\n\n\n\n\n')
+			# print(color)
 	except:
 		for i in file_list:
 			print(str(count) + i + "\n")
-			[di, mo, co, hi, pca_ima, sq] = image_processing.pil_get_image_metadata(i, 2, int(300/2))
+			[di, mo, co, hi, pca_im, sq] = image_processing.pil_get_image_metadata(i, 2, int(300/2))
 			if di != (-1,-1):
 				co = modify_color(co)
 				hi = modify_histogram(hi)
@@ -111,11 +115,13 @@ def modify_image_metadata(file_list):
 			color += [co]
 			histo += [hi]
 			square += [sq]
+			pca_ima += [pca_im]
 			# image_processing.get_image_metadata(i, 2, 3)
 			# print(type(histo[0][0][0]))
 			count += 1
-			if count == 3:
-				break
+			# if count == 3:
+			# 	break
+		# print(pca_ima)
 		with open('data.json', 'w') as outfile:
 			json.dump([dimension, mode, color, histo, pca_ima, square], outfile)
 		# print(histo)

@@ -199,7 +199,8 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 	color = get_color(image)
 	# extrema = get_extrema(image)
 	histo = get_color_histo(image)
-	pca_ima = pca_image(image, 10)
+	pca_ima = pca_image(image, 30)
+	# print(pca_ima)
 	coeffs = find_coeffs([(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])],[(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])])
 
 	try:
