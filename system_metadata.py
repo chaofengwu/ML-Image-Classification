@@ -34,10 +34,11 @@ def image_file_in_folder(folder_path, flag):
 # print(image_file_in_folder("/home/ubuntu/pub8", 1))
 def get_system_metadata(folder_path, flag):
 	[file_list, file_name, file_extension] = image_file_in_folder(folder_path, flag)
-
+	f = open('/home/chaofeng/Documents/practicum/file_list.txt','w')
 	file_size = []
-	for i in file_list:
-		file_size += [os.stat(i).st_size]
+	for i in range(len(file_list)):
+		file_size += [os.stat(file_list[i]).st_size]
+		f.write(file_list[i] + '\n')
 	return [file_list, file_name, file_extension, file_size]
 
 # [file_list, file_name, file_extension, file_size] = get_system_metadata("/home/ubuntu/try", 1)

@@ -59,16 +59,18 @@ def get_label_data(file_name, data_choosed):
 		# you may also want to remove whitespace characters like `\n` at the end of each line
 	content = [x.strip()[0] for x in content]
 	res = []
-	for i in range(len(data_choosed)):
-		res.append(int(content[data_choosed[i]]))
+	for i in range(len(content)):
+		if content[i] != '0':
+			res.append(int(content[i]))
+	# for i in range(len(data_choosed)):
+	# 	res.append(int(content[data_choosed[i]]))
 	return res
 
 def wtf():
 	X, valid_list = get_image('/home/chaofeng/Documents/practicum/file_list.txt')
-	y = get_label_data('/home/chaofeng/Documents/practicum/test_label.txt', valid_list)
+	y = get_label_data('/home/chaofeng/Documents/practicum/label_no_wrong_file.txt', valid_list)
 
 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.5, random_state=42)
-
 	n_components = 30
 	pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(X_train)
 
@@ -76,7 +78,7 @@ def wtf():
 
 	X_train_pca = pca.transform(X_train)
 	X_test_pca = pca.transform(X_test)
-
+	print(X_test_pca[0])
 
 	param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
 	              'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
@@ -97,27 +99,28 @@ def wtf():
 	print(y_test)
 
 
-X, valid_list = get_image('/home/chaofeng/Documents/practicum/file_list.txt')
-y = get_label_data('/home/chaofeng/Documents/practicum/test_label.txt', valid_list)
+wtf()
+# X, valid_list = get_image('/home/chaofeng/Documents/practicum/file_list.txt')
+# y = get_label_data('/home/chaofeng/Documents/practicum/test_label.txt', valid_list)
 
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.5, random_state=42)
+# # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.5, random_state=42)
 
-n_components = 30
-pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(X_train)
+# n_components = 30
+# pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(X_train)
 
-eigenfaces = pca.components_.reshape((n_components, 300, 300))
+# eigenfaces = pca.components_.reshape((n_components, 300, 300))
 
-X_train_pca = pca.transform(X_train)
-X_test_pca = pca.transform(X_test)
-
-
-param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
-              'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
-
-clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
-clf = cross_validation.cross_val_score
-
-print(clf.best_estimator_)
+# X_train_pca = pca.transform(X_train)
+# X_test_pca = pca.transform(X_test)
 
 
-y_pred = clf.predict(X_test_pca)
+# param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
+#               'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
+
+# clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+# clf = cross_validation.cross_val_score
+
+# print(clf.best_estimator_)
+
+
+# y_pred = clf.predict(X_test_pca)

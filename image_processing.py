@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 import json
 
 plot_flag = 0
-image_size = 300,300
+image_size = 100,100
 
 def add(x,y): 
 	return x+y
@@ -179,13 +179,14 @@ def pca_value(input_data, n_components):
 
 
 def pca_image(image, n_components):
-	i = image.resize((50, 50), Image.ANTIALIAS)
+	i = image.resize(image_size, Image.ANTIALIAS)
 	# i.show()
 	imag = image.convert("L")
-	# ima = np.array(imag.getdata())
-	ima = np.array(imag)
-
-	return pca_value(ima, n_components).tolist()
+	# ima = np.array(imag)
+	# ima = np.array(list(imag.getdata()))
+	ima = list(imag.getdata())
+	return ima
+	# return pca_value(ima, n_components).tolist()
 
 
 def scale_to_width(dimensions, width):
@@ -200,16 +201,16 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 	try:
 		image = Image.open(file_name)
 	except:
-		return [(-1,-1), "RGB", [],[],[],[]]
+		return [(-1,-1), "RGB", [],[],[]]
 
 	dimension = get_dimension(image)
 	mode = get_mode(image)
 	color = get_color(image)
 	# extrema = get_extrema(image)
 	histo = get_color_histo(image)
-	pca_ima = pca_image(image, 10)
+	# pca_ima = pca_image(image, 10)
 	# print(pca_ima)
-	coeffs = find_coeffs([(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])],[(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])])
+	# coeffs = find_coeffs([(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])],[(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])])
 
 	try:
 		im = image.resize(image_size, Image.ANTIALIAS)
@@ -220,7 +221,7 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 	except:
 		print("error when transfrom image size in PIL: " + file_name)
 		square = []
-	return [dimension, mode, color, histo, pca_ima, square]
+	return [dimension, mode, color, histo, square]
 
 
 # [dimension, mode, color, extrema, histo, square] = get_image_metadata("maps.jpeg", 2, 3)

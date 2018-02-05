@@ -29,4 +29,4 @@ def label_file(content, output_file):
 	f.close()
 
 file_list = read_file_list('file_list.txt')
-label_file(file_list, 'label.txt')
+label_file(file_list, '/home/chaofeng/Documents/practicum/label_no_wrong_file.txt')

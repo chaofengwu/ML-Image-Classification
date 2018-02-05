@@ -69,10 +69,31 @@ def change_label(file_name, output_file):
 	content = get_label_data(file_name)
 	f = open(output_file, 'w')
 	for i in content:
-		if i[0] == '5':
-			f.write('4\t' + i[1] + '\n')
+		if i[0] == '0':
+			# f.write('4\t' + i[1] + '\n')
+			pass
 		else:
 			f.write(i[0] + '\t' + i[1] + '\n')
 	f.close()
 
-change_label('test_label.txt', 'test_label1.txt')
+# change_label('new_label.txt', 'new_label1.txt')
+
+def exclude_wrong_file(file_list_name, label_list_name, output_file):
+	label = get_label_data(label_list_name)
+	file_name = []
+
+	with open(file_list_name) as f:
+		content = f.readlines()
+		# you may also want to remove whitespace characters like `\n` at the end of each line
+		file_name += [x.strip()[0:len(x)-1] for x in content]
+	f = open(output_file, 'w')
+	count = 0
+	for i in range(len(label)):
+		# print('=========' + label[i][1] + '\n')
+		print(file_name[count])
+		if label[i][1] == file_name[count]:
+			f.write(label[i][0] + '\t' + label[i][1] + '\n')
+			count += 1
+	f.close()
+
+exclude_wrong_file('/home/chaofeng/Documents/practicum/file_list.txt', '/home/chaofeng/Documents/practicum/new_label.txt', '/home/chaofeng/Documents/practicum/label_no_wrong_file.txt')
