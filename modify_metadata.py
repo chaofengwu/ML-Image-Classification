@@ -5,12 +5,12 @@ import json
 
 
 def pca_value(input_data, n_components):
-	pca = PCA(n_components=n_components)
+	pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True)
 	# pca = PCA()
-	a = pca.fit(input_data)
+	a = pca.fit_transform(np.array(input_data))
 	# print(a.explained_variance_ratio_)
 	# print(a.singular_values_)
-	return a.singular_values_
+	return a#.singular_values_
 
 def add(x,y): 
 	return x+y
@@ -50,8 +50,9 @@ def modify_histogram(hi):
 	res = []
 	temp = [hi[0:255],hi[255:510],hi[510:765]]
 	# print(temp)
-	for i in range(3):
-		res += [pca_value([temp[i],[1]*255],2).tolist()]
+	# for i in range(3):
+		# res += [pca_value([temp[i],[1]*255],2).tolist()]
+	res += [pca_value(temp,2).tolist()]
 	return res
 
 
@@ -101,7 +102,7 @@ def modify_image_metadata(file_list):
 	except:
 		for i in file_list:
 			print(str(count) + i + "\n")
-			[di, mo, co, hi, pca_im, sq] = image_processing.pil_get_image_metadata(i, 2, int(300/2))
+			[di, mo, co, hi, pca_im, sq] = image_processing.pil_get_image_metadata(i, 3, int(300/3))
 			if di != (-1,-1):
 				co = modify_color(co)
 				hi = modify_histogram(hi)

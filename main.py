@@ -19,7 +19,17 @@ print(start_time)
 
 [dimension, mode, color, histo, pca_ima, square] = modify_metadata.modify_image_metadata(file_list)
 
-svm.try_svm(dimension, color, histo, pca_ima, square, '/home/chaofeng/Documents/practicum/new_label.txt')
+# print(color[0])
+print(histo[0])
+print(len(histo))
+print(len(histo[0]))
+print(len(histo[0][0]))
+print(len(histo[0][0][0]))
+# # print(len(pca_ima[0][1]))
+# print(len(histo[0]))
+print(len(square[0]))
+svm.try_svm(dimension, color, histo, pca_ima, square, '/home/chaofeng/Documents/practicum/test_label.txt')
+svm.try_logi_reg(dimension, color, histo, pca_ima, square, '/home/chaofeng/Documents/practicum/test_label.txt')
 
 # input_data = [dimension, color, histo, pca_ima, square]
 # raw_image_matadata = []

@@ -1,7 +1,8 @@
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import ShuffleSplit
+from sklearn.model_selection import GridSearchCV
+# from sklearn.model_selection import ShuffleSplit
 from sklearn.svm import SVC
 from sklearn import cross_validation
 from sklearn.metrics import accuracy_score
@@ -31,23 +32,23 @@ def get_train_data(dimension, color, histo, pca_ima, square):
 				continue
 		temp = []
 		# temp.extend(color[i])
-		# for j in range(len(histo[i])):
+		# for j in range(len(histo[i][0])):
 		# 	# temp.append(histo[i][j][0])
-		# 	temp.extend(histo[i][j])
+		# 	temp.extend(histo[i][0][j])
 		# for j in range(len(square[i])):
 		# 	temp.extend(square[i][j])
-		# temp.extend((pca_ima[i]))
+		# temp.extend((pca_ima[i][0]))
 
 		
-		# temp.extend(color[i])
+		temp.extend(color[i])
 		# temp.extend([j/(color[i][len(color[i])-1]) for j in color[i]])
-		# for j in range(len(histo[i])):
-		# 	temp.append(histo[i][j][0])
-		# 	# temp.extend(histo[i][j])
-		# for j in range(len(square[i])):
-		# 	temp.extend(square[i][j])
-		temp.extend((pca_ima[i]))
-
+		for j in range(len(histo[i])):
+			# temp.append(histo[i][0][j])
+			temp.extend(histo[i][0][j])
+		for j in range(len(square[i])):
+			temp.extend(square[i][j])
+		# print(pca_ima[i])
+		temp.extend((pca_ima[i][0]))
 
 
 		feature_data += [temp]
@@ -56,6 +57,7 @@ def get_train_data(dimension, color, histo, pca_ima, square):
 	# print(feature_data[32])
 	# print(feature_data[53])
 	# print(feature_data[80])
+	print(feature_data[1][0])
 	return data_choosed, feature_data
 
 def get_label_data(file_name, data_choosed):
@@ -84,15 +86,32 @@ def try_svm(dimension, color, histo, pca_ima, square, label_file_name):
 	# c, r = data_label.shape
 	# data_label = data_label.reshape(c,)
 
-	logreg = linear_model.LogisticRegression(C=1e5)# .fit(data_train, data_label)
-	score = cross_validation.cross_val_score(logreg, data_train, data_label, cv = 10, scoring='accuracy')
-	print(sum(score)/len(score))
-	# svm = SVC(kernel='rbf', C=1)
-	# # cv = ShuffleSplit(n_splits=3, test_size=0.3, random_state=0)
-	# score = cross_val_score(svm, data_train, data_label, cv = 5)
-	# score = cross_validation.cross_val_score(svm, data_train, data_label, cv = 10, scoring='accuracy')
+	# param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
+	svm = SVC(kernel='rbf')
+	# svm = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+	# score = cross_val_score(svm, data_train, data_label, cv = 10)
+	score = cross_validation.cross_val_score(svm, data_train, data_label, cv = 10, scoring='accuracy')
 	print(score)
+	print(sum(score)/len(score))
 
+def try_logi_reg(dimension, color, histo, pca_ima, square, label_file_name):
+	[data_choosed, data_train] = get_train_data(dimension,color, histo, pca_ima, square)
+	data_label = get_label_data(label_file_name, data_choosed)
+
+	# print(data_train)
+	# print(type(data_label))
+	# print(len(data_train))
+	# print(len(data_label))
+	data_train = np.asarray(data_train)
+	data_label = np.asarray(data_label)
+	# print(data_label.shape)
+	# c, r = data_label.shape
+	# data_label = data_label.reshape(c,)
+
+	logreg = linear_model.LogisticRegression(C=1e6)
+	score = cross_val_score(logreg, data_train, data_label, cv = 10, scoring='accuracy')
+	print(score)
+	print(sum(score)/len(score))
 
 
 # get_label_data('/home/chaofeng/Documents/practicum/label.txt')
@@ -101,31 +120,3 @@ def try_svm(dimension, color, histo, pca_ima, square, label_file_name):
 
 
 ########### Predict
-
-
-
-
-
-# # importing necessary libraries
-
- 
-# # loading the iris dataset
-# iris = datasets.load_iris()
- 
-# # X -> features, y -> label
-# X = iris.data
-# y = iris.target
- 
-# # dividing X, y into train and test data
-# X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 0)
- 
-# # training a linear SVM classifier
-# from sklearn.svm import SVC
-# svm_model_linear = SVC(kernel = 'linear', C = 1).fit(X_train, y_train)
-# svm_predictions = svm_model_linear.predict(X_test)
- 
-# # model accuracy for X_test  
-# accuracy = svm_model_linear.score(X_test, y_test)
- 
-# # creating a confusion matrix
-# cm = confusion_matrix(y_test, svm_predictions)

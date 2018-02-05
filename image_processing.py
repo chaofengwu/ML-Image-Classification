@@ -165,18 +165,26 @@ def find_coeffs(pa, pb):
 
 
 def pca_value(input_data, n_components):
-	pca = PCA(n_components=n_components)
-	# pca = PCA()
-	a = pca.fit(input_data)
+	pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True)
+	# pca = PCA(n_components='mle')
+
+	# pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(input_data)
+	a = pca.fit_transform(input_data)
+	# eigenfaces = pca.components_.reshape((n_components, 300,300))
+	# a = pca.transform(input_data)
 	# print(a.explained_variance_ratio_)
 	# print(a.singular_values_)
-	return a.singular_values_
+	return a#.singular_values_
+	# return a
 
 
 def pca_image(image, n_components):
-	
+	i = image.resize((50, 50), Image.ANTIALIAS)
+	# i.show()
 	imag = image.convert("L")
+	# ima = np.array(imag.getdata())
 	ima = np.array(imag)
+
 	return pca_value(ima, n_components).tolist()
 
 
@@ -199,12 +207,12 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 	color = get_color(image)
 	# extrema = get_extrema(image)
 	histo = get_color_histo(image)
-	pca_ima = pca_image(image, 30)
+	pca_ima = pca_image(image, 10)
 	# print(pca_ima)
 	coeffs = find_coeffs([(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])],[(0,0), (image_size[0], 0), (image_size[0], image_size[1]), (0, image_size[1])])
 
 	try:
-		im = image.resize(image_size, Image.NEAREST)
+		im = image.resize(image_size, Image.ANTIALIAS)
 		# im = image.transform(image_size, Image.PERSPECTIVE, coeffs, resample = Image.BICUBIC)
 		# im.show()
 		dime = get_dimension(im)
