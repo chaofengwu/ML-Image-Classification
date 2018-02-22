@@ -1,13 +1,13 @@
 from __future__ import print_function
 
-from resizeimage import resizeimage
-from PIL import Image
+#from resizeimage import resizeimage
+#from PIL import Image
 
 from time import time
-import logging
-import matplotlib.pyplot as plt
+#import logging
+#import matplotlib.pyplot as plt
 import numpy as np
-import csv
+#import csv
 import random
 import get_file_list
 
@@ -25,6 +25,8 @@ from numpy import genfromtxt
 import pickle
 
 def test(X, y):
+	#print(X)
+	#print(y)
 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.5, random_state=42)
 	n_components = 30
 	pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(X_train)
@@ -61,24 +63,41 @@ def train(X_train, y_train):
 	eigenfaces = pca.components_.reshape((n_components, 300, 300))
 
 	X_train_pca = pca.transform(X_train)
-	print(X_test_pca[0])
+	print(X_train_pca)
 
 	param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
 	              'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
 
 	clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
 	clf = clf.fit(X_train_pca, y_train)
-	pickle.dump(pca, open('pca_model.sav'))
-	pickle.dump(clf, open('clf_model.sav'))
+	pickle.dump(pca, open('pca_model.sav', 'wb'))
+	pickle.dump(clf, open('clf_model.sav', 'wb'))
+
+def test_predict(X, y):
+	try:
+		pca = pickle.load(open('pca_model.sav', 'rb'))
+		clf = pickle.load(open('clf_model.sav', 'rb'))
+	except:
+		print('please first train the model.')
+
+
+	X_test = pca.transform(X)
+	y_pred = clf.predict(X_test)
+	count = 0
+	for i in range(len(y)):
+		if y_pred[i] == y[i]:
+			count += 1
+	print(count/len(y))
+	print(y_pred)
 
 
 def predict(X):
 	try:
-		pca = pickle.load(open('pca_model.sav'))
-		pca = pickle.load(open('clf_model.sav'))
+		pca = pickle.load(open('pca_model.sav', 'rb'))
+		clf = pickle.load(open('clf_model.sav', 'rb'))
 	except:
 		print('please first train the model.')
 
 	X_pca = pca.transform(X)
 	y_pred = clf.predict(X_pca)
-	
+	print(y_pred)

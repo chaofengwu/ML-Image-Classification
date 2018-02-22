@@ -1,5 +1,5 @@
 import os
-import imghdr
+# import imghdr
 import json
 
 image_extension = ["jpg", "png", "gif", "bmp", "jpeg", "tif", "tiff", "jif", "jfif", "jp2", "jpx", "j2k", "j2c", "fpx", "pcd"]
@@ -36,7 +36,7 @@ def get_system_metadata(folder_path, flag=1):
 	# [file_list, file_name, file_extension] = image_file_in_folder(folder_path, flag)
 	[file_list, file_name] = image_file_in_folder(folder_path, flag)
 	# f = open('/home/chaofeng/Documents/practicum/file_list.txt','w')
-	f = open('file_list.txt'. 'w')
+	f = open('file_list.txt', 'w')
 	file_size = []
 	for i in range(len(file_list)):
 		file_size += [os.stat(file_list[i]).st_size]

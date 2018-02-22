@@ -5,23 +5,23 @@ from PIL import Image
 
 from time import time
 import logging
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
-import csv
+# import csv
 import random
 import get_file_list
 
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
-from sklearn.decomposition import PCA
-from sklearn.svm import SVC
-from sklearn import cross_validation
+#from sklearn.model_selection import train_test_split
+#from sklearn.model_selection import GridSearchCV
+#from sklearn.metrics import classification_report
+#from sklearn.metrics import confusion_matrix
+#from sklearn.decomposition import PCA
+#from sklearn.svm import SVC
+#from sklearn import cross_validation
 
-from scipy import misc
+#from scipy import misc
 
-from numpy import genfromtxt
+# from numpy import genfromtxt
 
 w,h = 300,300
 
@@ -33,12 +33,13 @@ def read_file_list(file_name):
 	return content
 
 
-def get_image(file_name):
+def get_image(file_list):
 	X = []
 	# file_list = read_file_list(file_name)
 	valid_list = []
 	idx = 0
 	for i in file_list:
+		# print(i)
 		try:
 			image = Image.open(i)
 			image = image.resize((w,h), Image.ANTIALIAS)

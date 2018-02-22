@@ -1,6 +1,7 @@
 import model
 import get_file_list
 import data
+import sys
 
 mode_flag = sys.argv[1]
 folder_path = sys.argv[2]
@@ -15,11 +16,16 @@ label_file_path = sys.argv[4]
 
 
 X, valid_list = data.get_image(file_list)
+print(X)
 y = data.get_label_data(label_file_path, valid_list)
 
 if(mode_flag == 'test'):
 	model.test(X, y)
-else if(mode_flag == 'train'):
+elif(mode_flag == 'train'):
 	model.train(X, y)
-else if (mode_flag == 'predict'):
+elif(mode_flag == 'test_predict'):
+	model.test_predict(X, y)
+elif (mode_flag == 'predict'):
 	model.predict(X)
+else:
+	print('unknown mode')
