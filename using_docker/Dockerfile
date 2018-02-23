@@ -1,4 +1,4 @@
-From python 3.6.3
+FROM python:3.6.3
 
 WORKDIR /test
 
@@ -10,4 +10,4 @@ EXPOSE 80
 
 ENV NAME World
 
-CMD ["python3", "main.py", "test", "", "1", ""]
+CMD ["python3", "main.py", "--mode", "test", "--folder_path", "/test/images/", "--folder_mode", "1", "--label", "label_no_wrong_file.txt"]
