@@ -33,7 +33,7 @@ def read_file_list(file_name):
 	return content
 
 
-def get_image(file_list):
+def get_image(file_list, resize_size):
 	X = []
 	# file_list = read_file_list(file_name)
 	valid_list = []
@@ -42,7 +42,7 @@ def get_image(file_list):
 		# print(i)
 		try:
 			image = Image.open(i)
-			image = image.resize((w,h), Image.ANTIALIAS)
+			image = image.resize((resize_size, resize_size), Image.ANTIALIAS)
 			image = image.convert('L')
 			img_array = list(image.getdata())
 			X.append(np.array(img_array))

@@ -1,13 +1,6 @@
 from __future__ import print_function
-
-#from resizeimage import resizeimage
-#from PIL import Image
-
 from time import time
-#import logging
-#import matplotlib.pyplot as plt
 import numpy as np
-#import csv
 import random
 import get_file_list
 
@@ -24,14 +17,14 @@ from scipy import misc
 from numpy import genfromtxt
 import pickle
 
-def test(X, y):
+def test(X, y, resize_size, pca_components):
 	#print(X)
 	#print(y)
 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.5, random_state=42)
-	n_components = 30
+	n_components = pca_components
 	pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(X_train)
 
-	eigenfaces = pca.components_.reshape((n_components, 300, 300))
+	eigenfaces = pca.components_.reshape((n_components, resize_size, resize_size))
 
 	X_train_pca = pca.transform(X_train)
 	X_test_pca = pca.transform(X_test)
@@ -56,11 +49,11 @@ def test(X, y):
 	print(y_test)
 
 
-def train(X_train, y_train):
-	n_components = 30
+def train(X_train, y_train, resize_size, pca_components):
+	n_components = pca_components
 	pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(X_train)
 
-	eigenfaces = pca.components_.reshape((n_components, 300, 300))
+	eigenfaces = pca.components_.reshape((n_components, resize_size, resize_size))
 
 	X_train_pca = pca.transform(X_train)
 	# print(X_train_pca)
@@ -101,7 +94,8 @@ def predict(X):
 	X_pca = pca.transform(X)
 	y_pred = clf.predict(X_pca)
 	print(y_pred)
-	f = open('prediction.txt', 'w')
-	for i in y_pred:
-		f.write(str(i) + '\n')
-	f.close()
+	return y_pred
+	# f = open('prediction.txt', 'w')
+	# for i in y_pred:
+	# 	f.write(str(i) + '\n')
+	# f.close()
