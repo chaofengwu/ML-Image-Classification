@@ -1,61 +1,99 @@
-import system_metadata
-# import image_processing
-import image_metadata
-import svm
+import model
+import get_file_list
+import data
+import sys
+import argparse
+import json
 import time
 
+parser = argparse.ArgumentParser(description='image classification: main function')
+parser.add_argument('--mode', type=str, default='test',
+                    help='mode to run the program: test, train, predict')
+parser.add_argument('--folder_path', type=str, default='/',
+                    help='the path of folder to work on')
+parser.add_argument('--folder_mode', type=int, default=1,
+                    help='whether looking through sub-folder, 1 is yes')
+parser.add_argument('--label', type=str, default='',
+                    help='if test, input the label file')
+parser.add_argument('--image_path', type=str, default='',
+					help='predict a image')
+parser.add_argument('--prediction_file', type=str, default='prediction.json',
+					help='where to store the prediction')
+parser.add_argument('--resize_to', type=int, default=300,
+					help='size of intermediate image')
+parser.add_argument('--pca_components', type=int, default=30,
+					help='dimension of reduced feature')
+argv = parser.parse_args()
 
-time_flag = 1
-# [file_list, file_name, file_extension, file_size] = get_system_metadata("/home/ubuntu/try", 1)
-if time_flag:
+
+mode_flag = argv.mode
+folder_path = argv.folder_path
+flag = argv.folder_mode
+label_file_path = argv.label
+image_path = argv.image_path
+prediction_file = argv.prediction_file
+resize_size = argv.resize_to
+pca_components = argv.pca_components
+
+if(image_path == ''):
+	print('get all image files')
+	[file_list, file_name] = get_file_list.get_system_metadata(folder_path, flag)
+else:
+	if(mode_flag == 'predict'):
+		print('get the image')
+		file_list = [image_path]
+	else:
+		print('if input just one image, it should be in predict mode')
+		
+
+print('get all image data')
+start_time = time.time()
+X, valid_list = data.get_image(file_list, resize_size)
+end_time = time.time()
+print('time used to get image data: ' + str(end_time-start_time))
+# print(X)
+
+
+if(mode_flag == 'test'):
+	print('get all label data')
+	y = data.get_label_data(label_file_path, valid_list)
 	start_time = time.time()
-print(start_time)
-
-###### system file metadata
-
-[file_list, file_name, file_extension, file_size] = system_metadata.get_system_metadata("/home/chaofeng/Documents/practicum/copy_images", 1)
-
-###### image content prediction
-
-[dimension, mode, color, histo, square] = image_metadata.image_metadata(file_list)
-
-# print(color[0])
-# print(histo[0])
-# print(len(histo))
-# print(len(histo[0]))
-# print(len(histo[0][0]))
-# print(len(histo[0][0][0]))
-# # # print(len(pca_ima[0][1]))
-# # print(len(histo[0]))
-# print(len(square[0]))
-svm.try_svm('/home/chaofeng/Documents/practicum/file_list.txt', '/home/chaofeng/Documents/practicum/data.json', '/home/chaofeng/Documents/practicum/label_no_wrong_file.txt')
-# svm.try_logi_reg(file_list, dimension, color, histo, square, '/home/chaofeng/Documents/practicum/test_label.txt')
-
-# input_data = [dimension, color, histo, pca_ima, square]
-# raw_image_matadata = []
-# count = 1
-# for i in file_list:
-# 	raw_image_matadata += [image_processing.pil_get_image_metadata(i, 1, 100)]
-# 	# image_processing.get_image_metadata(i, 2, 3)
-# 	print(str(count) + i + "\n")
-# 	count += 1
-
-if time_flag:
+	model.test(X, y, resize_size, pca_components)
 	end_time = time.time()
-	train_time = end_time - start_time
-	print('total time: %d seconds' % train_time)
+	print('finish')
+	print('time used for test: ' + str(end_time-start_time))
+elif(mode_flag == 'train'):
+	print('get all label data')
+	y = data.get_label_data(label_file_path, valid_list)
+	print('start training')
+	start_time = time.time()
+	model.train(X, y, resize_size, pca_components)
+	end_time = time.time()
+	print('finish train, model in clf and pca')
+	print('time used for train: ' + str(end_time-start_time))
+elif(mode_flag == 'test_predict'):
+	print('get all label data')
+	y = data.get_label_data(label_file_path, valid_list)
+	print('start test predict')
+	start_time = time.time()
+	model.test_predict(X, y)
+	end_time = time.time()
+	print('finish test_predict')
+	print('time used for test_predict: ' + str(end_time-start_time))
+elif (mode_flag == 'predict'):
+	print('start predict')
+	start_time = time.time()
+	prediction = model.predict(X)
+	end_time = time.time()
+	print('finish prediction')
+	print('time used to predict: ' + str(end_time-start_time))
+	print('save to ' + prediction_file)
+	data = []
+	for i in range(0, len(file_list)):
+		data.append({file_list[i]: int(prediction[i])})
+	print(data)
+	with open(prediction_file, 'w') as json_file:
+		json.dump(data, json_file)
 
-# print(len(file_list))
-# print(len(dimension))
-# print(dimension)
-# print(color)
-# print(histo)
-# print(pca_ima)
-# print(square)
-
-# file_n = "file_list.txt"
-# file = open(file_n, "w")
-# for i in file_list:
-# 	file.write(i + "\n")
-
-# file.close()
+else:
+	print('unknown mode')
