@@ -37,11 +37,18 @@ pca_components = argv.pca_components
 
 if(image_path == ''):
 	print('get all image files')
+	start_time = time.time()
 	[file_list, file_name] = get_file_list.get_system_metadata(folder_path, flag)
+	end_time = time.time()
+	print('time used to get image files: ' + str(end_time-start_time))
+
 else:
 	if(mode_flag == 'predict'):
 		print('get the image')
+		start_time = time.time()
 		file_list = [image_path]
+		end_time = time.time()
+		print('time used to get image: ' + str(end_time-start_time))
 	else:
 		print('if input just one image, it should be in predict mode')
 		
@@ -50,7 +57,7 @@ print('get all image data')
 start_time = time.time()
 X, valid_list = data.get_image(file_list, resize_size)
 end_time = time.time()
-print('time used to get image data: ' + str(end_time-start_time))
+print('time used to extract image data: ' + str(end_time-start_time))
 # print(X)
 
 
@@ -91,7 +98,7 @@ elif (mode_flag == 'predict'):
 	data = []
 	for i in range(0, len(file_list)):
 		data.append({file_list[i]: int(prediction[i])})
-	print(data)
+	# print(data)
 	with open(prediction_file, 'w') as json_file:
 		json.dump(data, json_file)
 
