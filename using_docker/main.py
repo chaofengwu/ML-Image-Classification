@@ -9,13 +9,13 @@ import time
 parser = argparse.ArgumentParser(description='image classification: main function')
 parser.add_argument('--mode', type=str, default='test',
                     help='mode to run the program: test, train, predict')
-parser.add_argument('--folder_path', type=str, default='/',
+parser.add_argument('--folder_path', type=str, default='data',
                     help='the path of folder to work on')
 parser.add_argument('--folder_mode', type=int, default=1,
                     help='whether looking through sub-folder, 1 is yes')
 parser.add_argument('--label', type=str, default='',
                     help='if test, input the label file')
-parser.add_argument('--image_path', type=str, default='',
+parser.add_argument('--image_path', type=str, default='11',
 					help='predict a image')
 parser.add_argument('--prediction_file', type=str, default='prediction.json',
 					help='where to store the prediction')
@@ -35,7 +35,7 @@ prediction_file = argv.prediction_file
 resize_size = argv.resize_to
 pca_components = argv.pca_components
 
-if(image_path == ''):
+if(image_path == '11'):
 	print('get all image files')
 	start_time = time.time()
 	[file_list, file_name] = get_file_list.get_system_metadata(folder_path, flag)
