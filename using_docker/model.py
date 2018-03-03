@@ -49,7 +49,7 @@ def test(X, y, resize_size, pca_components):
 	print(y_test)
 
 
-def train(X_train, y_train, resize_size, pca_components):
+def train(X_train, y_train, resize_size, pca_components, save_path):
 	n_components = pca_components
 	pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(X_train)
 
@@ -63,13 +63,13 @@ def train(X_train, y_train, resize_size, pca_components):
 
 	clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
 	clf = clf.fit(X_train_pca, y_train)
-	pickle.dump(pca, open('pca_model.sav', 'wb'))
-	pickle.dump(clf, open('clf_model.sav', 'wb'))
+	pickle.dump(pca, open(save_path + '/pca_model.sav', 'wb'))
+	pickle.dump(clf, open(save_path + '/clf_model.sav', 'wb'))
 
-def test_predict(X, y):
+def test_predict(X, y, save_path):
 	try:
-		pca = pickle.load(open('pca_model.sav', 'rb'))
-		clf = pickle.load(open('clf_model.sav', 'rb'))
+		pca = pickle.load(open(save_path + '/pca_model.sav', 'rb'))
+		clf = pickle.load(open(save_path + '/clf_model.sav', 'rb'))
 	except:
 		print('please first train the model.')
 
@@ -84,10 +84,10 @@ def test_predict(X, y):
 	print(y_pred)
 
 
-def predict(X):
+def predict(X, save_path):
 	try:
-		pca = pickle.load(open('pca_model.sav', 'rb'))
-		clf = pickle.load(open('clf_model.sav', 'rb'))
+		pca = pickle.load(open(save_path + '/pca_model.sav', 'rb'))
+		clf = pickle.load(open(save_path + '/clf_model.sav', 'rb'))
 	except:
 		print('please first train the model.')
 
