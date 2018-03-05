@@ -1,0 +1,55 @@
+Motivation
+	1. Background
+		1) The move towards data-driven science has resulted in a data explosion: scientific file systems and data repositories continue to grow at an alarming rate. However, without considerable continued investment many of these data repositories quickly become data swamps, hindering the ability of scientists to locate, organize, and interpret data. 
+		2) Poor organization and clutter in large scientific repositories complicates data discovery and analysis
+
+	2. Example of messy repository
+
+	3. Skluma
+		Automated tool Skluma processes extracting metadata and inferring contextual relationships between files in such repositories, converting them into indexed, searchable collections. 
+
+	4. Dealing with Images
+		Metadata extraction from image files is complex problem not yet addressed by Skluma:  image formats vary, represented by one or more matrices of pixel color values and text, and objects within images must be recognized or predicted
+		We present a module for Skluma containing methods for extracting and processing feature and content-based metadata from image files in large data repositories.
+
+		goal: extracting some metadata and classify the images for further extraction
+
+Designed Solution
+	1. metadata to extract
+		1) file path
+		2) file name
+		3) file size
+		4) file extension
+		5) image color mode
+		6) image dimension
+		7) category
+			1 line_plots, 2 maps, 3 map&depth_chart, 4 map&colorplot, 5 map&histogram, 6 for figures
+			put example here
+
+	2. features used to supervised learning to classify images
+		1) mean block
+		2) color histogram, Returns a histogram for the image. The histogram is returned as a list of pixel counts, one for each pixel value in the source image.
+		3) colors used in image, an unsorted list of (count, pixel) values.
+		4) extrema pixel values, the minimum and maximum pixel values for each band in the image.
+			Returns: For a single-band image, a 2-tuple containing the minimum and maximum pixel value. For a multi-band image, a tuple containing one 2-tuple for each band.
+		5) pca on resized image
+
+Evaluation
+	1. Dataset: CDIAC
+	500,000+ files, 150+ file types
+	use part of CDIAC
+		1) number of images 532
+		2) number extension 'gif': 18, 'png': 64, 'jpg': 449, 'bmp': 1
+
+	2. accuracy of model and feature used
+
+	3. pca accuracy on different labels, recall, F1 score, support
+
+	4. time used
+		1) training time
+
+		time used to number of file
+		1) get image file list
+		2) extracting data from image
+		3) prediction time
+
