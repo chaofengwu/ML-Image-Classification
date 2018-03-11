@@ -1,4 +1,4 @@
-Motivation
+Motivation 4'
 	1. Background
 		1) The move towards data-driven science has resulted in a data explosion: scientific file systems and data repositories continue to grow at an alarming rate. However, without considerable continued investment many of these data repositories quickly become data swamps, hindering the ability of scientists to locate, organize, and interpret data. 
 		2) Poor organization and clutter in large scientific repositories complicates data discovery and analysis
@@ -14,7 +14,7 @@ Motivation
 
 		goal: extracting some metadata and classify the images for further extraction
 
-Designed Solution
+Designed Solution 4'
 	1. metadata to extract
 		1) file path
 		2) file name
@@ -29,19 +29,29 @@ Designed Solution
 	2. features used to supervised learning to classify images
 		1) mean block
 		2) color histogram, Returns a histogram for the image. The histogram is returned as a list of pixel counts, one for each pixel value in the source image.
-		3) colors used in image, an unsorted list of (count, pixel) values.
-		4) extrema pixel values, the minimum and maximum pixel values for each band in the image.
-			Returns: For a single-band image, a 2-tuple containing the minimum and maximum pixel value. For a multi-band image, a tuple containing one 2-tuple for each band.
+			3) colors used in image, an unsorted list of (count, pixel) values.
+			4) extrema pixel values, the minimum and maximum pixel values for each band in the image.
+				Returns: For a single-band image, a 2-tuple containing the minimum and maximum pixel value. For a multi-band image, a tuple containing one 2-tuple for each band.
 		5) pca on resized image
 
-Evaluation
+Evaluation 4'
 	1. Dataset: CDIAC
 	500,000+ files, 150+ file types
 	use part of CDIAC
 		1) number of images 532
 		2) number extension 'gif': 18, 'png': 64, 'jpg': 449, 'bmp': 1
+		3) 1:51, 2:236, 3:105, 4:87, 5:49, 6:4
 
 	2. accuracy of model and feature used
+		1) why choose image_pca?
+			i)	highest accuracy
+			ii)	more gereral feature, better when dataset are large
+			iii)fast to get feature
+
+		2) why choose logistic regression?
+			i)	higher accuracy
+			ii)	less train and predict time
+			iii)may perform better when more data (more robust to outliers since tolerate some of outliers)
 
 	3. pca accuracy on different labels, recall, F1 score, support
 
@@ -53,3 +63,7 @@ Evaluation
 		2) extracting data from image
 		3) prediction time
 
+
+Q:  file_name, date -- easy
+    recognize the content of multimedia files has long been a challenge in computer vision and machine learning.
+I can recognize the content of the images. 
