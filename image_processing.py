@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 import json
 
 plot_flag = 0
-image_size = 100,100
+image_size = 300,300
 
 def add(x,y): 
 	return x+y
@@ -127,8 +127,11 @@ def n_square_mean(image, upper_b, lower_b, right_b, left_b, n, mode):
 						t = map(add, (pix[lower_b + i + k*row_length,left_b + j + l*col_length]), t)
 					except:
 						# t = [0,0,0]
-						print([i + k*row_length,j + l*col_length])
-						print("index wrong in n_square_mean")
+						if mode == "L":
+							t[0] = pix[lower_b + i + k*row_length,left_b + j + l*col_length] + t[0]
+						else:
+							print([i + k*row_length,j + l*col_length])
+							print("index wrong in n_square_mean")
 			temp.append([x/sq for x in t])
 		# print('in n_square_mean: %d' % len(temp))
 		# print('in n_square_mean: %d' % len(temp[0]))
@@ -147,7 +150,7 @@ def get_n_block(image, dimension, n_block, n_mean):
 	col_length = int(dimension[1] / n_block)
 	for i in range(n_block):
 		for j in range(n_block):
-			square += [n_square_mean(image, dimension[0] - i*row_length, dimension[0]-(i+1)*row_length, dimension[1]-j*col_length, dimension[1] - (j+1)*col_length, n_mean, "RGB")]
+			square += [n_square_mean(image, dimension[0] - i*row_length, dimension[0]-(i+1)*row_length, dimension[1]-j*col_length, dimension[1] - (j+1)*col_length, n_mean, "L")]
 	return square
 
 
@@ -205,7 +208,7 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 
 	dimension = get_dimension(image)
 	mode = get_mode(image)
-	color = get_color(image)
+	# color = get_color(image)
 	# extrema = get_extrema(image)
 	histo = get_color_histo(image)
 	# pca_ima = pca_image(image, 10)
@@ -221,7 +224,8 @@ def pil_get_image_metadata(file_name, n_block, n_mean): #totally get n_block, ea
 	except:
 		print("error when transfrom image size in PIL: " + file_name)
 		square = []
-	return [dimension, mode, color, histo, square]
+	# return [dimension, mode, color, histo, square, extrema]
+	return [dimension, mode, histo, square]
 
 
 # [dimension, mode, color, extrema, histo, square] = get_image_metadata("maps.jpeg", 2, 3)

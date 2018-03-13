@@ -97,32 +97,34 @@ def modify_image_metadata():
 	# pca_ima = []
 	count = 1
 	try:
-		with open("modified_data.json") as json_file:
-				[dimension, mode, color, histo, square] = json.load(json_file)
+		# with open("modified_data.json") as json_file:
+		# 		[dimension, mode, color, histo, square, extrema] = json.load(json_file)
+		with open("data.json") as json_file:
+			[dimension, histo, square] = json.load(json_file)
 	except:
 		with open("data.json") as json_file:
-			[dimension, color, histo, square] = json.load(json_file)
+			[dimension, histo, square] = json.load(json_file)
 
 
 	# # print(color[0])
 	# print(histo[0])
 	# print(square[0])
-	for i in range(len(dimension)):
-		# print(i)
-		if dimension[i] != [-1,-1]:
-			# print(dimension[i])
-			color[i] = modify_color(color[i])
-			histo[i] = modify_histogram(histo[i])
-			square[i] = modify_square(square[i])
-		else:
-			color[i] = [0,0,0,0,0]
-			histo[i] = [[0,0],[0,0],[0,0]]
-			square[i] = [0,0,0]
-	with open('modified_data.json', 'w') as outfile:
-		json.dump([dimension, color, histo, square], outfile)
+		for i in range(len(dimension)):
+			# print(i)
+			if dimension[i] != [-1,-1]:
+				# print(dimension[i])
+				color[i] = modify_color(color[i])
+				histo[i] = modify_histogram(histo[i])
+				square[i] = modify_square(square[i])
+			else:
+				color[i] = [0,0,0,0,0]
+				histo[i] = [[0,0],[0,0],[0,0]]
+				square[i] = [0,0,0]
+		with open('modified_data.json', 'w') as outfile:
+			json.dump([dimension, color, histo, square], outfile)
 			# print(histo)
 	
-	return [dimension, color, histo, square]
+	return [dimension, histo, square]
 
 # [dimension, mode, color, histo, pca_ima, square] = modify_image_metadata(['/home/chaofeng/Documents/practicum/copy_images/images/s04ialk.jpg', '/home/chaofeng/Documents/practicum/copy_images/images/septalkmap.jpg','/home/chaofeng/Documents/practicum/copy_images/images/SAVE_All.jpg', '/home/chaofeng/Documents/practicum/copy_images/images/sr3dic.jpg', '/home/chaofeng/Documents/practicum/copy_images/images/TH2012.jpg'])
 

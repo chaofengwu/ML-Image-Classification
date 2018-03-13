@@ -17,7 +17,7 @@ print(start_time)
 
 ###### image content prediction
 
-[dimension, mode, color, histo, square] = image_metadata.image_metadata(file_list)
+# [dimension, mode, histo, square] = image_metadata.image_metadata(file_list)
 
 # print(color[0])
 # print(histo[0])
@@ -28,7 +28,11 @@ print(start_time)
 # # # print(len(pca_ima[0][1]))
 # # print(len(histo[0]))
 # print(len(square[0]))
-svm.try_svm('/home/chaofeng/Documents/practicum/file_list.txt', '/home/chaofeng/Documents/practicum/data.json', '/home/chaofeng/Documents/practicum/label_no_wrong_file.txt')
+file_file_list = '/home/chaofeng/Documents/practicum/file_list.txt'
+label_file = '/home/chaofeng/Documents/practicum/label_no_wrong_file.txt'
+flag = 4
+svm.try_svm(file_file_list, label_file, flag)
+svm.try_logi_reg(file_file_list, label_file, flag)
 # svm.try_logi_reg(file_list, dimension, color, histo, square, '/home/chaofeng/Documents/practicum/test_label.txt')
 
 # input_data = [dimension, color, histo, pca_ima, square]
@@ -43,7 +47,7 @@ svm.try_svm('/home/chaofeng/Documents/practicum/file_list.txt', '/home/chaofeng/
 if time_flag:
 	end_time = time.time()
 	train_time = end_time - start_time
-	print('total time: %d seconds' % train_time)
+	print('total time: %f seconds' % train_time)
 
 # print(len(file_list))
 # print(len(dimension))

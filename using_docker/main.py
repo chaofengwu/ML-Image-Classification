@@ -9,16 +9,14 @@ import time
 parser = argparse.ArgumentParser(description='image classification: main function')
 parser.add_argument('--mode', type=str, default='test',
                     help='mode to run the program: test, train, predict')
-parser.add_argument('--folder_path', type=str, default='data/',
+parser.add_argument('--folder_path', type=str, default='/',
                     help='the path of folder to work on')
 parser.add_argument('--folder_mode', type=int, default=1,
                     help='whether looking through sub-folder, 1 is yes')
 parser.add_argument('--label', type=str, default='',
                     help='if test, input the label file')
-parser.add_argument('--image_path', type=str, default='11',
+parser.add_argument('--image_path', type=str, default='',
 					help='predict a image')
-parser.add_argument('--model_path', type=str, default='model/',
-					help='path to save and read model')
 parser.add_argument('--prediction_file', type=str, default='prediction.json',
 					help='where to store the prediction')
 parser.add_argument('--resize_to', type=int, default=300,
@@ -36,9 +34,8 @@ image_path = argv.image_path
 prediction_file = argv.prediction_file
 resize_size = argv.resize_to
 pca_components = argv.pca_components
-model_path = argv.model_path
 
-if(image_path == '11'):
+if(image_path == ''):
 	print('get all image files')
 	start_time = time.time()
 	[file_list, file_name] = get_file_list.get_system_metadata(folder_path, flag)
@@ -77,7 +74,7 @@ elif(mode_flag == 'train'):
 	y = data.get_label_data(label_file_path, valid_list)
 	print('start training')
 	start_time = time.time()
-	model.train(X, y, resize_size, pca_components, model_path)
+	model.train(X, y, resize_size, pca_components)
 	end_time = time.time()
 	print('finish train, model in clf and pca')
 	print('time used for train: ' + str(end_time-start_time))
@@ -86,14 +83,14 @@ elif(mode_flag == 'test_predict'):
 	y = data.get_label_data(label_file_path, valid_list)
 	print('start test predict')
 	start_time = time.time()
-	model.test_predict(X, y, model_path)
+	model.test_predict(X, y)
 	end_time = time.time()
 	print('finish test_predict')
 	print('time used for test_predict: ' + str(end_time-start_time))
 elif (mode_flag == 'predict'):
 	print('start predict')
 	start_time = time.time()
-	prediction = model.predict(X, model_path)
+	prediction = model.predict(X)
 	end_time = time.time()
 	print('finish prediction')
 	print('time used to predict: ' + str(end_time-start_time))
